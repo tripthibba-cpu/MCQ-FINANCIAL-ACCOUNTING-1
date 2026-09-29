@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Financial Accounting — MCQ Exam</title>
+<style>
+  :root{
+    --navy:#0f2942; --navy2:#16385c; --accent:#2f7dd6; --accent-dark:#1f5ea8;
+    --bg:#f4f7fb; --card:#ffffff; --text:#1c2733; --muted:#5c6b7a;
+    --danger:#c0392b; --danger-bg:#fdecea; --ok:#1e8e5a; --border:#e1e7ee;
+    --radius:12px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; font-family:"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:linear-gradient(180deg,var(--navy) 0%,var(--navy2) 220px,var(--bg) 220px);
+    color:var(--text); min-height:100vh;
+  }
+  .wrap{max-width:760px;margin:0 auto;padding:32px 16px 60px;}
+  header.top{color:#fff;text-align:center;padding:20px 16px 4px;}
+  header.top h1{margin:0 0 4px;font-size:1.5rem;font-weight:700;}
+  header.top p{margin:0;opacity:.85;font-size:.9rem;}
+  .card{
+    background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
+    padding:28px; margin-top:24px; box-shadow:0 8px 24px rgba(15,41,66,.08);
+  }
+  .hidden{display:none !important;}
+  h2{margin-top:0;font-size:1.2rem;color:var(--navy);}
+  .subject-btn{
+    display:flex;align-items:center;justify-content:space-between;width:100%;
+    padding:18px 20px;border:2px solid var(--border);border-radius:var(--radius);
+    background:#fff;cursor:pointer;font-size:1rem;font-weight:600;color:var(--navy);
+    transition:.15s;text-align:left;
+  }
+  .subject-btn:hover{border-color:var(--accent);background:#f2f8ff;}
+  .subject-btn span.tag{font-size:.75rem;font-weight:600;color:var(--accent);border:1px solid var(--accent);padding:3px 9px;border-radius:20px;}
+  label{display:block;font-weight:600;font-size:.88rem;margin:16px 0 6px;color:var(--navy);}
+  input[type=text]{
+    width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:8px;
+    font-size:1rem;outline:none;transition:.15s;
+  }
+  input[type=text]:focus{border-color:var(--accent);}
+  .btn{
+    appearance:none;border:none;border-radius:8px;padding:13px 22px;font-size:1rem;
+    font-weight:700;cursor:pointer;transition:.15s;
+  }
+  .btn-primary{background:var(--accent);color:#fff;}
+  .btn-primary:hover{background:var(--accent-dark);}
+  .btn-primary:disabled{background:#9fb6cc;cursor:not-allowed;}
+  .btn-block{width:100%;margin-top:22px;}
+  ul.rules{margin:14px 0 0;padding-left:20px;color:var(--muted);font-size:.92rem;line-height:1.7;}
+  .exam-header{
+    position:sticky;top:0;background:#fff;padding:14px 18px;border-radius:var(--radius);
+    display:flex;justify-content:space-between;align-items:center;box-shadow:0 4px 14px rgba(15,41,66,.08);
+    border:1px solid var(--border); z-index:5; flex-wrap:wrap; gap:8px;
+  }
+  .timer{font-weight:800;font-size:1.15rem;color:var(--navy);}
+  .timer.low{color:var(--danger);}
+  .progress-pill{font-size:.85rem;color:var(--muted);font-weight:600;}
+  .qcard{margin-top:18px;}
+  .qmeta{font-size:.78rem;color:var(--muted);font-weight:700;letter-spacing:.03em;text-transform:uppercase;margin-bottom:6px;}
+  .qtext{font-size:1.05rem;font-weight:600;margin:0 0 16px;line-height:1.5;}
+  .opt{
+    display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border:1.5px solid var(--border);
+    border-radius:9px;margin-bottom:10px;cursor:pointer;transition:.12s;
+  }
+  .opt:hover{border-color:var(--accent);}
+  .opt.selected{border-color:var(--accent);background:#eef6ff;}
+  .opt input{margin-top:3px;}
+  .navrow{display:flex;justify-content:space-between;margin-top:20px;gap:10px;}
+  .btn-secondary{background:#eef2f7;color:var(--navy);}
+  .btn-secondary:hover{background:#e1e8f0;}
+  .navrow .btn{flex:1;}
+  .qgrid{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px;}
+  .qdot{
+    width:32px;height:32px;border-radius:7px;border:1.5px solid var(--border);background:#fff;
+    font-size:.78rem;font-weight:700;color:var(--muted);cursor:pointer;display:flex;
+    align-items:center;justify-content:center;
+  }
+  .qdot.answered{background:var(--ok);border-color:var(--ok);color:#fff;}
+  .qdot.current{outline:2px solid var(--accent);outline-offset:1px;}
+  .warn-overlay{
+    position:fixed;inset:0;background:rgba(15,20,30,.55);display:flex;align-items:center;
+    justify-content:center;z-index:50;padding:20px;
+  }
+  .warn-box{
+    background:#fff;border-radius:14px;padding:28px;max-width:420px;text-align:center;
+    border-top:6px solid var(--danger);
+  }
+  .warn-box h3{color:var(--danger);margin:0 0 10px;}
+  .warn-box p{color:var(--muted);margin:0 0 18px;font-size:.92rem;line-height:1.5;}
+  .badge-danger{
+    display:inline-block;background:var(--danger-bg);color:var(--danger);font-weight:700;
+    font-size:.78rem;padding:4px 10px;border-radius:20px;margin-bottom:10px;
+  }
+  .result-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);font-size:.95rem;}
+  .result-row:last-child{border-bottom:none;}
+  .result-row .val{font-weight:700;color:var(--navy);}
+  .final-score{text-align:center;padding:20px 0 6px;}
+  .final-score .num{font-size:2.6rem;font-weight:800;color:var(--accent);}
+  .final-score .lbl{color:var(--muted);font-size:.9rem;}
+  .status-line{font-size:.85rem;color:var(--muted);margin-top:8px;}
+  .foot-note{font-size:.78rem;color:var(--muted);text-align:center;margin-top:22px;}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <h1>Online MCQ Examination Portal</h1>
+  <p>Select your subject to begin</p>
+</header>
+
+<div class="wrap">
+
+  <!-- SCREEN 1: Subject selection -->
+  <section id="screen-subject" class="card">
+    <h2>Choose Subject</h2>
+    <button class="subject-btn" id="pick-fa">
+      Financial Accounting
+      <span class="tag">25 Questions · 15 min</span>
+    </button>
+  </section>
+
+  <!-- SCREEN 2: Student details -->
+  <section id="screen-details" class="card hidden">
+    <h2>Financial Accounting — Candidate Details</h2>
+    <label for="stu-name">Full Name</label>
+    <input type="text" id="stu-name" placeholder="Enter your full name" autocomplete="off" />
+    <label for="stu-reg">Register Number</label>
+    <input type="text" id="stu-reg" placeholder="Enter your register number" autocomplete="off" />
+
+    <ul class="rules">
+      <li>25 questions, 15 minutes. The exam auto-submits when time runs out.</li>
+      <li>Do not switch browser tabs or minimize the window during the exam.</li>
+      <li>Each tab switch is logged and deducts 10% of the maximum marks from your score.</li>
+      <li>Once started, the exam cannot be paused.</li>
+    </ul>
+    <button class="btn btn-primary btn-block" id="start-exam" disabled>Start Exam</button>
+    <p class="status-line" id="load-status"></p>
+  </section>
+
+  <!-- SCREEN 3: Exam -->
+  <section id="screen-exam" class="hidden">
+    <div class="exam-header">
+      <div>
+        <div class="progress-pill" id="progress-pill">Question 1 of 25</div>
+      </div>
+      <div class="timer" id="timer">15:00</div>
+    </div>
+
+    <div class="card qcard">
+      <div class="qmeta" id="q-label">Question 1</div>
+      <p class="qtext" id="q-text">Loading…</p>
+      <div id="q-options"></div>
+
+      <div class="navrow">
+        <button class="btn btn-secondary" id="btn-prev">Previous</button>
+        <button class="btn btn-secondary" id="btn-next">Next</button>
+      </div>
+
+      <div class="qgrid" id="qgrid"></div>
+
+      <button class="btn btn-primary btn-block" id="btn-submit">Submit Exam</button>
+    </div>
+  </section>
+
+  <!-- SCREEN 4: Result -->
+  <section id="screen-result" class="card hidden">
+    <h2>Exam Submitted</h2>
+    <div class="final-score">
+      <div class="num" id="res-final">--</div>
+      <div class="lbl">Final Score (out of <span id="res-total">25</span>)</div>
+    </div>
+    <div class="result-row"><span>Questions Attempted</span><span class="val" id="res-attempted"></span></div>
+    <div class="result-row"><span>Correct Answers</span><span class="val" id="res-correct"></span></div>
+    <div class="result-row"><span>Wrong Answers</span><span class="val" id="res-wrong"></span></div>
+    <div class="result-row"><span>Tab Switches Detected</span><span class="val" id="res-tabswitch"></span></div>
+    <div class="result-row"><span>Marks Deducted</span><span class="val" id="res-deduction"></span></div>
+    <div class="result-row"><span>Malpractice Flag</span><span class="val" id="res-malpractice"></span></div>
+    <p class="foot-note">Your result has been recorded. You may close this window.</p>
+  </section>
+
+  <p class="foot-note">Financial Accounting MCQ Portal</p>
+</div>
+
+<!-- Tab-switch warning modal -->
+<div class="warn-overlay hidden" id="warn-overlay">
+  <div class="warn-box">
+    <span class="badge-danger">Malpractice Warning</span>
+    <h3>Tab Switch Detected</h3>
+    <p id="warn-text">You left the exam tab. This has been recorded and 10% of the maximum marks has been deducted from your score. Please stay on this tab for the rest of the exam.</p>
+    <button class="btn btn-primary" id="warn-ok">I Understand, Continue</button>
+  </div>
+</div>
+
+<script>
+/* ============ CONFIGURATION ============ */
+// Paste your Apps Script Web App URL here (Deploy > New deployment > Web app).
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwzffeeaVyEQnY5VgP-gpHOSk1txCMBlyPeoS78qqrRzVXGZ4WacskO6QTXxMBt9Re0MA/exec";
+
+/* ============ STATE ============ */
+let questions = [];          // [{qno, question, options:[...]}]
+let durationSeconds = 15*60;
+let answers = {};            // {qno: selectedOptionText}
+let currentIndex = 0;
+let tabSwitchCount = 0;
+let timerInterval = null;
+let remainingSeconds = 0;
+let examStartTime = null;
+let submitted = false;
+let studentName = "", studentReg = "";
+
+/* ============ SCREEN HELPERS ============ */
+function show(id){
+  ["screen-subject","screen-details","screen-exam","screen-result"].forEach(s=>{
+    document.getElementById(s).classList.toggle("hidden", s!==id);
+  });
+}
+
+/* ============ SCREEN 1 -> 2 ============ */
+document.getElementById("pick-fa").addEventListener("click", () => {
+  show("screen-details");
+  loadQuestions();
+});
+
+function loadQuestions(){
+  const statusEl = document.getElementById("load-status");
+  statusEl.textContent = "Loading exam questions…";
+  fetch(WEB_APP_URL + "?action=getQuestions")
+    .then(r => r.json())
+    .then(data => {
+      if (data.error) { statusEl.textContent = "Error: " + data.error; return; }
+      questions = data.questions;
+      durationSeconds = data.durationSeconds || 15*60;
+      statusEl.textContent = "Ready. " + questions.length + " questions loaded.";
+      document.getElementById("start-exam").disabled = false;
+    })
+    .catch(err => {
+      statusEl.textContent = "Could not reach the exam server. Check WEB_APP_URL / your connection.";
+      console.error(err);
+    });
+}
+
+/* ============ SCREEN 2 -> 3 ============ */
+document.getElementById("start-exam").addEventListener("click", () => {
+  studentName = document.getElementById("stu-name").value.trim();
+  studentReg = document.getElementById("stu-reg").value.trim();
+  if (!studentName || !studentReg) {
+    alert("Please enter both your name and register number.");
+    return;
+  }
+  if (!questions.length) {
+    alert("Questions have not finished loading yet. Please wait a moment.");
+    return;
+  }
+  beginExam();
+});
+
+function beginExam(){
+  show("screen-exam");
+  currentIndex = 0;
+  answers = {};
+  tabSwitchCount = 0;
+  remainingSeconds = durationSeconds;
+  examStartTime = Date.now();
+  buildQGrid();
+  renderQuestion();
+  startTimer();
+  attachTabSwitchDetection();
+}
+
+/* ============ TIMER ============ */
+function startTimer(){
+  updateTimerDisplay();
+  timerInterval = setInterval(() => {
+    remainingSeconds--;
+    updateTimerDisplay();
+    if (remainingSeconds <= 0) {
+      clearInterval(timerInterval);
+      submitExam(true);
+    }
+  }, 1000);
+}
+function updateTimerDisplay(){
+  const m = Math.floor(remainingSeconds/60).toString().padStart(2,"0");
+  const s = (remainingSeconds%60).toString().padStart(2,"0");
+  const el = document.getElementById("timer");
+  el.textContent = m + ":" + s;
+  el.classList.toggle("low", remainingSeconds <= 60);
+}
+
+/* ============ QUESTION RENDERING ============ */
+function buildQGrid(){
+  const grid = document.getElementById("qgrid");
+  grid.innerHTML = "";
+  questions.forEach((q, i) => {
+    const dot = document.createElement("div");
+    dot.className = "qdot";
+    dot.textContent = i+1;
+    dot.addEventListener("click", () => { currentIndex = i; renderQuestion(); });
+    grid.appendChild(dot);
+  });
+}
+function refreshQGrid(){
+  const dots = document.getElementById("qgrid").children;
+  questions.forEach((q, i) => {
+    dots[i].classList.toggle("answered", answers[q.qno] !== undefined);
+    dots[i].classList.toggle("current", i === currentIndex);
+  });
+}
+function renderQuestion(){
+  const q = questions[currentIndex];
+  document.getElementById("progress-pill").textContent = `Question ${currentIndex+1} of ${questions.length}`;
+  document.getElementById("q-label").textContent = `Question ${currentIndex+1}`;
+  document.getElementById("q-text").textContent = q.question;
+
+  const optWrap = document.getElementById("q-options");
+  optWrap.innerHTML = "";
+  q.options.forEach((optText, idx) => {
+    const row = document.createElement("label");
+    row.className = "opt" + (answers[q.qno] === optText ? " selected" : "");
+    row.innerHTML = `<input type="radio" name="opt" ${answers[q.qno]===optText?"checked":""}/> <span>${escapeHtml(optText)}</span>`;
+    row.addEventListener("click", () => {
+      answers[q.qno] = optText;
+      renderQuestion();
+      refreshQGrid();
+    });
+    optWrap.appendChild(row);
+  });
+
+  document.getElementById("btn-prev").disabled = currentIndex === 0;
+  document.getElementById("btn-next").style.visibility = currentIndex === questions.length-1 ? "hidden" : "visible";
+  refreshQGrid();
+}
+function escapeHtml(str){
+  const d = document.createElement("div");
+  d.textContent = str;
+  return d.innerHTML;
+}
+
+document.getElementById("btn-prev").addEventListener("click", () => {
+  if (currentIndex>0){ currentIndex--; renderQuestion(); }
+});
+document.getElementById("btn-next").addEventListener("click", () => {
+  if (currentIndex<questions.length-1){ currentIndex++; renderQuestion(); }
+});
+document.getElementById("btn-submit").addEventListener("click", () => {
+  if (confirm("Submit the exam now? You cannot change answers after submitting.")) {
+    submitExam(false);
+  }
+});
+
+/* ============ TAB-SWITCH / MALPRACTICE DETECTION ============ */
+function attachTabSwitchDetection(){
+  document.addEventListener("visibilitychange", onVisibilityChange);
+  window.addEventListener("blur", onWindowBlur);
+}
+function detachTabSwitchDetection(){
+  document.removeEventListener("visibilitychange", onVisibilityChange);
+  window.removeEventListener("blur", onWindowBlur);
+}
+let lastBlurAt = 0;
+function onVisibilityChange(){
+  if (document.hidden && !submitted) registerTabSwitch();
+}
+function onWindowBlur(){
+  // Avoid double counting when visibilitychange already fired.
+  const now = Date.now();
+  if (now - lastBlurAt < 800) return;
+  lastBlurAt = now;
+  if (!submitted) registerTabSwitch();
+}
+function registerTabSwitch(){
+  tabSwitchCount++;
+  document.getElementById("warn-text").textContent =
+    `You left the exam tab. This has been recorded (violation #${tabSwitchCount}) and 10% of the maximum marks has been deducted from your score. Please stay on this tab for the rest of the exam.`;
+  document.getElementById("warn-overlay").classList.remove("hidden");
+}
+document.getElementById("warn-ok").addEventListener("click", () => {
+  document.getElementById("warn-overlay").classList.add("hidden");
+});
+
+/* ============ SUBMIT ============ */
+function submitExam(auto){
+  if (submitted) return;
+  submitted = true;
+  clearInterval(timerInterval);
+  detachTabSwitchDetection();
+
+  const timeTakenSeconds = Math.round((Date.now() - examStartTime)/1000);
+  const qnos = questions.map(q => q.qno);
+
+  const payload = {
+    action: "submit",
+    name: studentName,
+    regNo: studentReg,
+    answers: answers,
+    qnos: qnos,
+    tabSwitchCount: tabSwitchCount,
+    timeTakenSeconds: timeTakenSeconds
+  };
+
+  fetch(WEB_APP_URL, {
+    method: "POST",
+    headers: { "Content-Type": "text/plain;charset=utf-8" }, // avoids CORS preflight
+    body: JSON.stringify(payload)
+  })
+    .then(r => r.json())
+    .then(data => showResult(data, auto))
+    .catch(err => {
+      console.error(err);
+      alert("Your exam finished, but the result could not be sent to the server. Please inform your instructor.");
+    });
+}
+
+function showResult(data, auto){
+  show("screen-result");
+  document.getElementById("res-final").textContent = (data.finalScore !== undefined) ? data.finalScore : "--";
+  document.getElementById("res-total").textContent = data.totalQuestions || questions.length;
+  document.getElementById("res-attempted").textContent = data.attempted ?? "-";
+  document.getElementById("res-correct").textContent = data.correct ?? "-";
+  document.getElementById("res-wrong").textContent = data.wrong ?? "-";
+  document.getElementById("res-tabswitch").textContent = data.tabSwitchCount ?? tabSwitchCount;
+  document.getElementById("res-deduction").textContent = (data.deductionPoints ?? 0) + " pts";
+  document.getElementById("res-malpractice").textContent = data.malpractice ?? (tabSwitchCount>0 ? "Yes" : "No");
+  if (auto) {
+    const h2 = document.querySelector("#screen-result h2");
+    h2.textContent = "Time's Up — Exam Auto-Submitted";
+  }
+}
+</script>
+</body>
+</html>
